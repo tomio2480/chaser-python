@@ -12,7 +12,7 @@ Python3 で動くクライアントのライブラリです．
 したがって，返る値の 0 番目から 8 番目の 9 つが，  
 すべてマップ情報となりますので，ご注意ください．  
 　  
-リポジトリを丸ごとダウンロードするときは[こちらのページ](https://bitbucket.org/tomio2480/chaser_python/downloads/)から．  
+リポジトリを丸ごとダウンロードするときは[こちら](https://github.com/tomio2480/chaser_python/archive/master.zip)から．  
 　  
 
 ## U-16プログラミングコンテストに係る参考資料
