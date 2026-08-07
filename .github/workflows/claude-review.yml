@@ -1,0 +1,31 @@
+name: Claude Review
+
+# tomio2480/github-workflows v2 の reusable workflow を呼び出す caller workflow．
+# 参照は @<SHA> # v2 形式の SHA pin で，Dependabot が更新 PR を起票する．
+# メンション判定・権限の実体・action の SHA pin は中央側へ集約している．
+# 起動はメンション方式（PR コメントに @claude）である．レビュー副系統であり，
+# 主担当は Codex（@codex review）である．
+# 事前準備: Claude GitHub App（https://github.com/apps/claude）のインストールと，
+# claude setup-token のトークンを Secrets の CLAUDE_CODE_OAUTH_TOKEN へ登録．
+# 詳細は https://github.com/tomio2480/github-workflows の README を参照．
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+
+# reusable workflow 側の宣言は本 caller の付与を超えられないため，
+# 必要な権限は caller で明示する．
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  id-token: write
+  actions: read # PR の CI 結果を Claude が読むために必要
+
+jobs:
+  claude:
+    uses: tomio2480/github-workflows/.github/workflows/claude-review.yml@20a93b5ca42235c26c13e742ccfcdee2ac999b99 # v2.6.0
+    secrets:
+      claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
