@@ -1,0 +1,37 @@
+name: Session URL Check
+
+# 中央リポジトリ tomio2480/github-workflows の composite action を呼ぶ caller workflow．
+# Claude Code が cloud / Remote Control セッションから作る commit と PR には，
+# 既定でセッション URL（claude.ai/code/session_…）が付く．公開 repo の履歴へ
+# 残ると commit 検索で横断的に集められるため，PR の段階で止める blocking gate．
+# 発生源の抑止は Claude Code 側の設定 attribution.sessionUrl=false である
+# （中央 repo の docs/session-url-check.md を参照）．
+#
+# `edited` を含めるのは，PR 本文の後編集で URL が入るケースを拾うためである．
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - edited
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: session-url-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Session URL Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check for Claude session URLs via composite action
+        uses: tomio2480/github-workflows/.github/actions/session-url-check@558c5440bd4f4d60c26b2ad66cc9020a71c1ebbb # v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
